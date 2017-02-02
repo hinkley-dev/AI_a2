@@ -26,6 +26,7 @@ class Agent {
 
 		if(!reachedGoal(m))
 		{
+
 			//draw path
 			Stack<MyState> displayPath = p.path;
 			MyState current = new MyState(0, null);
@@ -43,7 +44,7 @@ class Agent {
 
 			//draw fronteir
 			PriorityQueue<MyState> fronteir = p.frontier;
-			int radius = 2;
+			int radius = 3;
 			if(click == 1)
 				g.setColor(Color.cyan);
 
