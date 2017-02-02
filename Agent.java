@@ -40,6 +40,7 @@ class Agent {
 				g2.drawLine(current.state[0], current.state[1], next.state[0], next.state[1]);
 			}
 
+
 			//draw fronteir
 			PriorityQueue<MyState> fronteir = p.frontier;
 			int radius = 2;
