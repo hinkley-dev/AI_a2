@@ -3,10 +3,10 @@ class MyState
   public double cost;
   MyState parent;
   int[] state;
-  double h;
+  double h; //heuristic
   //because epsilon valuse makes edge of screen under 600 and 1200
-  public static final int xMax  = 1200;
-  public static final int yMax = 600;
+  public static final int xMax  = (int)Model.XMAX;
+  public static final int yMax = (int)Model.YMAX;
   public static final int xMin = 0;
   public static final int yMin = 0;
 

@@ -7,6 +7,7 @@ class MyPlanner
   PriorityQueue<MyState> frontier;
   TreeSet<MyState> visited;
   static double maxSpeed;
+  static int terrainTileSize = 10;
 
   MyPlanner(Model m)
   {
@@ -18,7 +19,6 @@ class MyPlanner
 
   public MyState UCS(MyState start, MyState goal)
   {
-
     start.parent = null;
     start.cost = 0;
 
@@ -32,10 +32,10 @@ class MyPlanner
 
     while(frontier.size() > 0)
     {
-
       MyState parent = frontier.poll();
 
-      if(Math.abs(parent.state[0] - goal.state[0]) < 10 && Math.abs(parent.state[1] - goal.state[1]) < 10 )
+      if(Math.abs(parent.state[0] - goal.state[0]) < terrainTileSize &&
+                  Math.abs(parent.state[1] - goal.state[1]) < terrainTileSize )
       {
         MyState end = new MyState(0,parent);
         end.state = goal.state.clone();
@@ -44,10 +44,10 @@ class MyPlanner
         copyPath(end);
         return end;
       }
-      for(int i = 0; i < 8; ++i)
+      for(int moveDirection = 0; moveDirection < 8; ++moveDirection)
       {
         double childCost = 0;
-        MyState child = addPossibleNextSteps(parent,   i);
+        MyState child = addPossibleNextSteps(parent, moveDirection);
         if(child.isValid())
         {
           childCost = getDistanceToDestination(parent, child)/((double)model.getTravelSpeed(child.state[0], child.state[1]));
@@ -68,12 +68,8 @@ class MyPlanner
             visited.add(child);
           }
         }
-
-        //check for replacing existing path
-
       }
     }
-    System.out.println("No path");
     return null;
   }
 
@@ -95,7 +91,8 @@ class MyPlanner
     {
       MyState parent = frontier.poll();
 
-      if(Math.abs(parent.state[0] - goal.state[0]) < 10 && Math.abs(parent.state[1] - goal.state[1]) < 10 )
+      if(Math.abs(parent.state[0] - goal.state[0]) < terrainTileSize &&
+         Math.abs(parent.state[1] - goal.state[1]) < terrainTileSize )
       {
         MyState end = new MyState(0,parent);
         end.state = goal.state.clone();
@@ -104,10 +101,10 @@ class MyPlanner
         copyPath(end);
         return end;
       }
-      for(int i = 0; i < 8; ++i)
+      for(int moveDirection = 0; moveDirection < 8; ++moveDirection)
       {
         double childCost = 0;
-        MyState child = addPossibleNextSteps(parent, i);
+        MyState child = addPossibleNextSteps(parent, moveDirection);
         if(child.isValid())
         {
           childCost = getDistanceToDestination(parent, child)/((double)model.getTravelSpeed(child.state[0], child.state[1]));
@@ -128,15 +125,10 @@ class MyPlanner
             frontier.add(child);
             visited.add(child);
           }
-
         }
-
       }
     }
-    System.out.println("No path");
     return null;
-
-
   }
 
   double findMaxSpeed()
@@ -152,7 +144,6 @@ class MyPlanner
       }
       return max;
   }
-
 
   MyState addPossibleNextSteps(MyState parent, int i)
   {
@@ -194,7 +185,6 @@ class MyPlanner
         destY = parent.state[1] + 10;
         break;
       default:
-        System.out.println("Error in for loop of UCS");
         break;
     }
 
@@ -206,22 +196,18 @@ class MyPlanner
 
   }
 
-
-
-  double getDistanceToDestination(MyState current, MyState goal) {
-
-    return Math.sqrt((current.state[0] - goal.state[0]) * (current.state[0] - goal.state[0]) + (current.state[1] - goal.state[1]) * (current.state[1] - goal.state[1]));
+  double getDistanceToDestination(MyState current, MyState goal)
+  {
+    return Math.sqrt((current.state[0] - goal.state[0]) * (current.state[0] - goal.state[0]) +
+                     (current.state[1] - goal.state[1]) * (current.state[1] - goal.state[1]));
   }
 
-
-
-
-  void copyPath(MyState f){
-    MyState current = f;
-    while(current != null)
-    {
-      path.push(current);
-      current = current.parent;
+    void copyPath(MyState f){
+      MyState current = f;
+      while(current != null)
+      {
+        path.push(current);
+        current = current.parent;
+      }
     }
   }
-}
